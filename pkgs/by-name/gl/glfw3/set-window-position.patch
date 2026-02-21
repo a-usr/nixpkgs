@@ -1,0 +1,32 @@
+From 6ccda64da243893ecc1e2cc3d492459e34dc83cf Mon Sep 17 00:00:00 2001
+From: John <81042605+a-usr@users.noreply.github.com>
+Date: Sat, 21 Feb 2026 17:56:40 +0100
+Subject: [PATCH] fix: dismiss warning about wayland not supporting
+ setting the window position
+
+In addition to other glfw patches, this patch is needed to enable
+Minecraft mod loaders based on older versions of FancyModLoader to run on Wayland. This is
+because FancyModLoader will try to spawn the Minecraft window in a smaller size
+in the middle of the screen during initialization.
+---
+ src/wl_window.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/wl_window.c b/src/wl_window.c
+index dd097cf..4fbec70 100644
+----- a/src/wl_window.c
++++ b/src/wl_window.c
+@@ -2424,8 +2424,8 @@ void _glfwSetWindowPosWayland(_GLFWwindow* window, int xpos, int ypos)
+ {
+     // A Wayland client can not set its position, so just warn
+ 
+-    _glfwInputError(GLFW_FEATURE_UNAVAILABLE,
+-                    "Wayland: The platform does not support setting the window position");
++    fprintf(stderr,
++        "[GLFW] Wayland: The platform does not support setting the window position");
+ }
+ 
+ void _glfwGetWindowSizeWayland(_GLFWwindow* window, int* width, int* height) 
+-- 
+2.52.0
+
